@@ -5,6 +5,8 @@ var http = require('http').Server(app);
 var chokidar = require('chokidar');
 var fs = require('fs');
 
+//NEED MONGO CONNECTION
+
 var fileCount = 0;
 
 var watcher = chokidar.watch('html_repo', {ignored: /[\/\\]\./, persistent: true});
