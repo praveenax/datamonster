@@ -3,16 +3,34 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var chokidar = require('chokidar');
+var fs = require('fs');
 
 var watcher = chokidar.watch('html_repo', {ignored: /[\/\\]\./, persistent: true});
 
 watcher
-  // .on('add', function(path) {console.log('File', path, 'has been added');})
-  .on('addDir', function(path) {console.log('Directory', path, 'has been added');})
-  .on('change', function(path) {
-    console.log('File', path, 'has been changed');
-    //run a function to analyze the file
+  .on('add', function(path) {
+    console.log('File', path, 'has been added');
+    //read the file and get the data input
+    var readStream = fs.createReadStream(path);
+    var lineReader = require('readline').createInterface({
+        input: readStream
+    });
+
+    // console.log(lineReader);
+    var lineCount = 1;
+    lineReader.on('line', function (line) {
+        // console.log('Line from file:', line);
+        // readStream.close();
+        // readStream.destroy();
+        if(lineCount == 1){
+          console.log(line);
+          lineCount++;
+        }
+
+    });
   })
+  .on('addDir', function(path) {console.log('Directory', path, 'has been added');})
+  .on('change', function(path) {console.log('File', path, 'has been changed');})
   .on('unlink', function(path) {console.log('File', path, 'has been removed');})
   .on('unlinkDir', function(path) {console.log('Directory', path, 'has been removed');})
   .on('error', function(error) {console.error('Error happened', error);})
