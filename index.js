@@ -24,6 +24,7 @@ watcher
         // readStream.destroy();
         if(lineCount == 1){
           console.log(line);
+          parseParameters(line);
           lineCount++;
         }
 
@@ -68,3 +69,25 @@ process.on( 'SIGINT', function() {
 // app.listen(3001, function () {
 //   console.log('Example app listening on port 3001!');
 // });
+
+function parseParameters(str){
+  var re1='((?:http|https)(?::\\/{2}[\\w]+)(?:[\\/|\\.]?)(?:[^\\s"]*))';	// HTTP URL 1
+        var re2='(\\s+)';	// White Space 1
+        var re3='(\\d+)';	// Integer Number 1
+        var re4='(\\s+)';	// White Space 2
+        var re5='(\\d+)';	// Integer Number 2
+
+        var p = new RegExp(re1+re2+re3+re4+re5,["i"]);
+        var m = p.exec(str);
+        if (m != null)
+        {
+            var httpurl1=m[1];
+            var ws1=m[2];
+            var int1=m[3];
+            var ws2=m[4];
+            var int2=m[5];
+            console.log("URL>>>>>"+httpurl1.replace(/</,"&lt;"));
+            console.log("TIMESTAMP>>>>>"+int1.replace(/</,"&lt;"));
+            console.log("STATUS CODE>>>>>"+int2.replace(/</,"&lt;"));
+        }
+}
