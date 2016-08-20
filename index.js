@@ -59,7 +59,8 @@ watcher.on('change', function(path, stats) {
 // });
 
 app.get('/', function(req, res){
-  res.send('console running!');
+  // res.send('console running!');
+  res.sendFile('client/index.html' , { root : 'client'});
 });
 
 http.listen(3001, function(){
