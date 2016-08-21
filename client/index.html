@@ -151,13 +151,25 @@
             }
           ];
 
-          $("#result_container").html("");
-          for(var i=0;i<result_data.length;i++){
-              var obj = result_data[i];
+          $.ajax({
+            type: "GET",
+            url: "/search?url="+url,
+            // data: data,
+            success: function(data){
+                console.log(data);
+                result_data = data["result"];
+                $("#result_container").html("");
+                for(var i=0;i<result_data.length;i++){
+                    var obj = result_data[i];
 
-              $("#result_container").append("<div class='panel panel-default col-md-12' style='padding:10px;'><div class='panel-heading col-md-8'>"+obj["url"]+"</div><div class='panel-heading col-md-4'>"+obj["version"]+"</div></div>");
+                    $("#result_container").append("<div class='panel panel-default col-md-12' style='padding:10px;'><div class='panel-heading col-md-8'>"+obj["url"]+"</div><div class='panel-heading col-md-4'>"+obj["version"]+"</div></div>");
 
-          }
+                }
+            }
+
+          });
+
+
 
 
         });
@@ -167,12 +179,25 @@
           var version = $("#version_holder").val();
           //ajax post
 
-          $("#result_container").html("");
+          $.ajax({
+            type: "GET",
+            url: "/raw?url="+url+"&version="+version,
+            // data: data,
+            success: function(data){
+                console.log(data);
+                // result_data = data["result"];
+                $("#result_container").html("");
+                $("#result_container").append("<div class='panel panel-primary col-md-12' style='padding:10px;'><div class='panel-heading col-md-8'>"+url+"</div><div class='panel-heading col-md-4'>"+version+"</div><div class='col-md-12'><xmp>"+data["html"]+"</xmp></div></div>");
+            }
 
-          var html_data = "<h1>test data </h1>";
+          });
+
+          // $("#result_container").html("");
+
+          // var html_data = "<h1>test data </h1>";
 
 
-          $("#result_container").append("<div class='panel panel-primary col-md-12' style='padding:10px;'><div class='panel-heading col-md-8'>"+url+"</div><div class='panel-heading col-md-4'>"+version+"</div><div class='col-md-12'><xmp>"+html_data+"</xmp></div></div>");
+          // $("#result_container").append("<div class='panel panel-primary col-md-12' style='padding:10px;'><div class='panel-heading col-md-8'>"+url+"</div><div class='panel-heading col-md-4'>"+version+"</div><div class='col-md-12'><xmp>"+html_data+"</xmp></div></div>");
 
 
 
