@@ -63,6 +63,21 @@ app.get('/', function(req, res){
   res.sendFile('client/index.html' , { root : 'client'});
 });
 
+app.get('/search', function(req, res){
+  var data = {
+    name:"praveen"
+  }
+
+  res.send(data);
+  // res.send('console running!');
+  // res.sendFile('client/index.html' , { root : 'client'});
+});
+
+app.get('/raw', function(req, res){
+  // res.send('console running!');
+  // res.sendFile('client/index.html' , { root : 'client'});
+});
+
 http.listen(3001, function(){
   console.log('listening on *:3001');
 });

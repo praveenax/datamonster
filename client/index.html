@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" href="http://v4-alpha.getbootstrap.com/favicon.ico">
 
-    <title>Starter Template for Bootstrap</title>
+    <title>Apptastic - MonsterHack</title>
 
     <!-- Bootstrap core CSS -->
 
@@ -19,6 +19,20 @@
     <!-- Custom styles for this template -->
     <!-- <link href=client/css/starter-template.css" rel="stylesheet"> -->
     <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+
+    <style media="screen">
+    pre{
+      font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+      margin-bottom: 10px;
+      overflow: auto;
+      width: auto;
+      padding: 5px;
+      background-color: #eee;
+      width: 650px!ie7;
+      padding-bottom: 20px!ie7;
+      max-height: 600px;
+    }
+    </style>
   </head>
 
   <body data-gr-c-s-loaded="true" style="font-family: 'Ubuntu', sans-serif;background:#bdc3c7;">
@@ -63,6 +77,18 @@
             <button id="search_html_content"  class="btn btn-success  col-md-12">Search for HTML</button>
           </div>
         </div>
+        <br>
+        <br>
+          <!-- <h3 style="text-align:center;margin-top:10px;color:white;">Search Result</h3> -->
+
+        <div id="result_container" class="container" style="height: 400px;overflow:auto;">
+
+
+
+        </div>
+
+
+
 
 
 
@@ -86,7 +112,72 @@
     <script>
       $(document).ready(function(){
 
-          
+        $("#search_versions").on("click",function(){
+          var url = $("#url_holder").val();
+          //ajax post
+
+          var result_data = [
+            {
+              url:"qweqweqweqwe",
+              version:"qweqweqweqwe"
+            },
+            {
+              url:"qweqweqweqwe",
+              version:"qweqweqweqwe"
+            },
+            {
+              url:"qweqweqweqwe",
+              version:"qweqweqweqwe"
+            },
+            {
+              url:"qweqweqweqwe",
+              version:"qweqweqweqwe"
+            },
+            {
+              url:"qweqweqweqwe",
+              version:"qweqweqweqwe"
+            },
+            {
+              url:"qweqweqweqwe",
+              version:"qweqweqweqwe"
+            },
+            {
+              url:"qweqweqweqwe",
+              version:"qweqweqweqwe"
+            },
+            {
+              url:"qweqweqweqwe",
+              version:"qweqweqweqwe"
+            }
+          ];
+
+          $("#result_container").html("");
+          for(var i=0;i<result_data.length;i++){
+              var obj = result_data[i];
+
+              $("#result_container").append("<div class='panel panel-default col-md-12' style='padding:10px;'><div class='panel-heading col-md-8'>"+obj["url"]+"</div><div class='panel-heading col-md-4'>"+obj["version"]+"</div></div>");
+
+          }
+
+
+        });
+
+        $("#search_html_content").on("click",function(){
+          var url = $("#url_holder").val();
+          var version = $("#version_holder").val();
+          //ajax post
+
+          $("#result_container").html("");
+
+          var html_data = "<h1>test data </h1>";
+
+
+          $("#result_container").append("<div class='panel panel-primary col-md-12' style='padding:10px;'><div class='panel-heading col-md-8'>"+url+"</div><div class='panel-heading col-md-4'>"+version+"</div><div class='col-md-12'><xmp>"+html_data+"</xmp></div></div>");
+
+
+
+        });
+
 
 
       });
