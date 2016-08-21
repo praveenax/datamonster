@@ -32,7 +32,7 @@ watcher
         // readStream.destroy();
         if(lineCount == 1){
           // console.log(line);
-          parseParameters(line);
+          parseParameters(line,path);
           lineCount++;
         }
 
@@ -99,7 +99,7 @@ app.get('/raw', function(req, res){
   var html_data = "<h1>Server rocks da <b>HTML</b></h1>";
 
   var data = {
-    
+
       name:"praveen",
       url:""+url,
       version:""+version,
@@ -145,7 +145,7 @@ function checkLogRegex(str){
         }
 }
 
-function parseParameters(str){
+function parseParameters(str,path){
         var re1='((?:http|https)(?::\\/{2}[\\w]+)(?:[\\/|\\.]?)(?:[^\\s"]*))';	// HTTP URL 1
         var re2='(\\s+)';	// White Space 1
         var re3='(\\d+)';	// Integer Number 1
@@ -162,7 +162,15 @@ function parseParameters(str){
             var ws2=m[4];
             var int2=m[5];
             console.log("URL>>>>>"+httpurl1.replace(/</,"&lt;"));
-            // console.log("TIMESTAMP>>>>>"+int1.replace(/</,"&lt;"));
-            // console.log("STATUS CODE>>>>>"+int2.replace(/</,"&lt;"));
+            console.log("TIMESTAMP>>>>>"+int1.replace(/</,"&lt;"));
+            // console.log("STATUS CODE>>>>>"+int2.replace(/</,"&lt;"))
+
+            //Create a DB model with values url, timestamp, path
+            //if older version available in all_files with same url
+            //get old url - path and delete it from all_files & delete the entry
+            //copy the new file into the path - add db entry
+            
+
+
         }
 }
