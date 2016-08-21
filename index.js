@@ -82,6 +82,30 @@ app.get('/', function (req, res) {
 });
 
 
+app.get('/allnames', function (req, res) {
+    var HTMLModel = require('./model/htmlmodel');
+    HTMLModel.find(function (err, items) {
+        if (err) return console.error(err);
+        console.log(items);
+
+        var result = [];
+
+        for (var i = 0; i < items.length; i++) {
+            var tmp_obj = {};
+
+            tmp_obj.url = items[i]["url"];
+
+            result.push(tmp_obj);
+        }
+
+        console.log(result);
+
+        var data = {};
+        data.result = result;
+        res.send(data);
+    })
+});
+
 ////I serve the URL search
 app.get('/search', function (req, res) {
 
@@ -111,7 +135,9 @@ app.get('/search', function (req, res) {
             var tmpObj = {};
 
             tmpObj.url = url;
+            tmpObj.version_raw = docs[i]["version"];
             tmpObj.version = moment(parseInt(docs[i]["version"])).format('MMMM Do YYYY, h:mm:ss a');
+            //            tmpObj.version_raw = docs[i]["version"];
 
 
             result.push(tmpObj);
@@ -159,6 +185,7 @@ app.get('/raw', function (req, res) {
 
             tmpObj.url = url;
             tmpObj.version = moment(parseInt(docs["version"])).format('MMMM Do YYYY, h:mm:ss a');
+            tmpObj.version_raw = docs["version"];
             tmpObj.html = "";
 
             //parse from new path for html
