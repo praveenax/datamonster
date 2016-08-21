@@ -12,6 +12,8 @@ mongoose.connect('mongodb://localhost:27017/MongoD');
 
 var fileCount = 0;
 
+
+//I watch the file dump
 var watcher = chokidar.watch('html_repo', {
     ignored: /[\/\\]\./,
     persistent: true
@@ -70,10 +72,8 @@ watcher.on('change', function (path, stats) {
 
 });
 
-// require('chokidar').watch('html_repo', {ignored: /[\/\\]\./}).on('all', function(event, path) {
-//   console.log(event, path);
-// });
 
+//I serve the landing page
 app.get('/', function (req, res) {
     // res.send('console running!');
     res.sendFile('index.html', {
@@ -81,6 +81,8 @@ app.get('/', function (req, res) {
     });
 });
 
+
+////I serve the URL search
 app.get('/search', function (req, res) {
 
     var url = req["query"]["url"];
@@ -129,6 +131,8 @@ app.get('/search', function (req, res) {
     // res.sendFile('client/index.html' , { root : 'client'});
 });
 
+
+//I serve the URL & Version search to get html data
 app.get('/raw', function (req, res) {
 
     var url = req["query"]["url"];
@@ -217,40 +221,24 @@ app.get('/raw', function (req, res) {
 
 });
 
+
 http.listen(3001, function () {
     console.log('listening on *:3001');
 });
 
+
+//To avoid node running in background - clean break
 process.on('SIGINT', function () {
     console.log("\nGracefully shutting down from SIGINT (Ctrl-C)");
     // some other closing procedures go here
     process.exit();
 })
 
-// // app.get('/', function (req, res) {
-// //   res.send('Hello World!');
-// // //    console.log("test");
-// // });
-//
-// app.listen(3001, function () {
-//   console.log('Example app listening on port 3001!');
-// });
 
 
-function checkLogRegex(str) {
-    var re1 = '((?:http|https)(?::\\/{2}[\\w]+)(?:[\\/|\\.]?)(?:[^\\s"]*))'; // HTTP URL 1
-    var re2 = '(\\s+)'; // White Space 1
-    var re3 = '(\\d+)'; // Integer Number 1
-    var re4 = '(\\s+)'; // White Space 2
-    var re5 = '(\\d+)'; // Integer Number 2
 
-    var p = new RegExp(re1 + re2 + re3 + re4 + re5, ["i"]);
-    var m = p.exec(str);
-    if (m != null) {
-        return true;
-    }
-}
 
+//check if the first line regex is present
 function parseParameters(str, path) {
     var re1 = '((?:http|https)(?::\\/{2}[\\w]+)(?:[\\/|\\.]?)(?:[^\\s"]*))'; // HTTP URL 1
     var re2 = '(\\s+)'; // White Space 1
@@ -375,12 +363,6 @@ function parseParameters(str, path) {
 
 
         });
-
-
-        // console.log(silence.name); // 'Silence'
-        // HTMLItem.speak();
-
-
 
 
     }
