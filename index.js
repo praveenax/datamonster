@@ -4,8 +4,12 @@ var app = require('express')();
 var http = require('http').Server(app);
 var chokidar = require('chokidar');
 var fs = require('fs');
+var mongoose = require('mongoose');
+var moment = require('moment');
+
 
 //NEED MONGO CONNECTION
+mongoose.connect('mongodb://localhost:27017/MongoD');
 
 var fileCount = 0;
 
@@ -68,19 +72,39 @@ app.get('/search', function(req, res){
   var url = req["query"]["url"];
   console.log(url);
 
-  var data = {
-    result :[{
-      name:"praveen",
-      url:""+url,
-      version:"1234"
-    },{
-      name:"praveen",
-      url:""+url,
-      version:"12345"
-    }]
-  }
 
-  res.send(data);
+  //input is url >>> output is version
+  var HTMLModel = require('./model/htmlmodel');
+
+  // var HTMLItem = new HTMLModel({ url: url_value,version:version_value , path:path_value });
+
+  HTMLModel.find({url: url}, null, {sort: {version: -1}}, function(err, docs) {
+
+      var data = {};
+      var result = [];
+      console.log('Items are  is ' + docs);
+
+      for(var i = 0;i<docs.length;i++){
+
+           var tmpObj = {};
+
+           tmpObj.url = url;
+           tmpObj.version = moment(parseInt(docs[i]["version"])).format('MMMM Do YYYY, h:mm:ss a');
+
+
+           result.push(tmpObj);
+
+
+     }
+
+     data.result = result;
+
+     res.send(data);
+
+  });
+
+
+
   // res.send('console running!');
   // res.sendFile('client/index.html' , { root : 'client'});
 });
@@ -98,16 +122,39 @@ app.get('/raw', function(req, res){
 
   var html_data = "<h1>Server rocks da <b>HTML</b></h1>";
 
-  var data = {
+  var HTMLModel = require('./model/htmlmodel');
+  HTMLModel.findOne({url: url,version:version}, null, {}, function(err, docs) {
 
-      name:"praveen",
-      url:""+url,
-      version:""+version,
-      html:""+html_data
+      var data = {};
+      // var result = [];
+      console.log('Items are  is ' + docs);
 
-  }
+      // for(var i = 0;i<docs.length;i++){
 
-  res.send(data);
+           var tmpObj = {};
+
+           tmpObj.url = url;
+           tmpObj.version = moment(parseInt(docs["version"])).format('MMMM Do YYYY, h:mm:ss a');
+           tmpObj.html=""+html_data;
+
+    //  }
+
+     data = tmpObj;
+
+     res.send(data);
+
+  });
+
+  // var data = {
+  //
+  //     name:"praveen",
+  //     url:""+url,
+  //     version:""+version,
+  //     html:""+html_data
+  //
+  // }
+  //
+  // res.send(data);
 });
 
 http.listen(3001, function(){
@@ -169,7 +216,103 @@ function parseParameters(str,path){
             //if older version available in all_files with same url
             //get old url - path and delete it from all_files & delete the entry
             //copy the new file into the path - add db entry
-            
+
+
+
+            // var db = mongoose.connection;
+            //
+            // db.once('open', function() {
+              // we're connected!
+
+              var url_value = httpurl1.replace(/</,"&lt;");
+              var version_value = parseInt(int1.replace(/</,"&lt;"));
+              var path_value = path;
+
+
+
+              var HTMLModel = require('./model/htmlmodel');
+
+
+              HTMLModel.count({url: url_value,version:version_value}, function(err, c) {
+
+                if(c == 0){
+                      var HTMLItem = new HTMLModel({ url: url_value,version:version_value , path:path_value });
+                      HTMLItem.save(function (err, HTMLItem) {
+
+                            if (err) return console.error(err);
+
+                            // HTMLModel.find(function (err, items) {
+                            //   if (err) return console.error(err);
+                            //   console.log(items);
+                            // })
+
+                            var fileName = "";
+                            var fname_re1='(html_repo)';	// Variable Name 1
+                            var fname_re2='((?:\\/[\\w\\.\\-]+)+)';	// Unix Path 1
+
+                            var p = new RegExp(fname_re1+fname_re2,["i"]);
+                            var m = p.exec(path_value);
+                            if (m != null)
+                            {
+
+                                fileName=m[2];
+                                // document.write("("+var1.replace(/</,"&lt;")+")"+"("+unixpath1.replace(/</,"&lt;")+")"+"\n");
+                            }
+
+                            fs.createReadStream(path_value).pipe(fs.createWriteStream("all_files"+fileName));
+                            fs.unlinkSync(path_value);
+                            HTMLModel.count({url: url_value}, function(err, c) {
+                                 console.log('Count for '+url_value+' is ' + c);
+
+                                 if(parseInt(c) > 3){
+
+                                   HTMLModel.find({url: url_value}).sort({version : 1}).limit(1).remove().exec(function(err,result){
+                                      if (err) {return err;}
+
+                                      // do stuff with maxResult[0]
+                                      HTMLModel.count({url: url_value}, function(err, c) {
+                                           console.log('Count for '+url_value+' is ' + c);
+                                      });
+
+                                  });
+
+                                 }
+                            });
+
+                            // HTMLModel.find({url: url_value}, null, {sort: {version: -1}}, function(err, docs) {
+                            //
+                            //    console.log('Items are  is ' + docs);
+                            //
+                            // });
+
+
+                            //Code to remove the lease valued
+                            // HTMLModel.find({url: url_value}).sort({version : 1}).limit(1).remove().exec(function(err,result){
+                            //     if (err) {return err;}
+                            //
+                            //     // do stuff with maxResult[0]
+                            //     HTMLModel.count({url: url_value}, function(err, c) {
+                            //          console.log('Count for '+url_value+' is ' + c);
+                            //     });
+                            //
+                            // });
+
+                      });
+
+
+
+                }else{
+                  fs.unlinkSync(path_value);
+                }
+
+
+              });
+
+
+              // console.log(silence.name); // 'Silence'
+              // HTMLItem.speak();
+
+
 
 
         }

@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 //Lets connect to our database using the DB server URL.
 mongoose.connect('mongodb://localhost:27017/MongoD');
 
-var User = mongoose.model('User', {name: String, roles: Array, age: Number});
+// var User = mongoose.model('User', {name: String, roles: Array, age: Number});
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
