@@ -60,12 +60,24 @@ watcher.on('change', function(path, stats) {
 
 app.get('/', function(req, res){
   // res.send('console running!');
-  res.sendFile('client/index.html' , { root : 'client'});
+  res.sendFile('index.html' , { root : 'client'});
 });
 
 app.get('/search', function(req, res){
+
+  var url = req["query"]["url"];
+  console.log(url);
+
   var data = {
-    name:"praveen"
+    result :[{
+      name:"praveen",
+      url:""+url,
+      version:"1234"
+    },{
+      name:"praveen",
+      url:""+url,
+      version:"12345"
+    }]
   }
 
   res.send(data);
@@ -74,8 +86,28 @@ app.get('/search', function(req, res){
 });
 
 app.get('/raw', function(req, res){
+
+  var url = req["query"]["url"];
+  var version = req["query"]["version"];
+
+  console.log(url);
+  console.log(version);
+
   // res.send('console running!');
   // res.sendFile('client/index.html' , { root : 'client'});
+
+  var html_data = "<h1>Server rocks da <b>HTML</b></h1>";
+
+  var data = {
+    
+      name:"praveen",
+      url:""+url,
+      version:""+version,
+      html:""+html_data
+
+  }
+
+  res.send(data);
 });
 
 http.listen(3001, function(){
