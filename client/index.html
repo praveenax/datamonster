@@ -165,7 +165,7 @@
                         for (var i = 0; i < result_data.length; i++) {
                             var obj = result_data[i];
 
-                            $("#result_container").append("<div class='panel panel-default col-md-12' style='padding:10px;'><div class='panel-heading col-md-8'>" + obj["url"] + "</div><div class='panel-heading col-md-4'>" + obj["version_raw"] + "</div><div class='panel-heading col-md-12'>" + obj["version"] + "</div></div>");
+                            $("#result_container").append("<div class='panel panel-default col-md-12' style='padding:10px;'><div class='panel-heading col-md-8'><a href='" + obj["url"] + "' target='_blank' >" + obj["url"] + "</a></div><div class='panel-heading col-md-4'>" + obj["version_raw"] + "</div><div class='panel-heading col-md-12'>" + obj["version"] + "</div></div>");
 
                         }
                     }
@@ -193,7 +193,7 @@
                             $("#result_container").html("No Data Found!");
                         } else {
                             $("#result_container").html("");
-                            $("#result_container").append("<div class='panel panel-primary col-md-12' style='padding:10px;'><div class='panel-heading col-md-8'>" + url + "</div><div class='panel-heading col-md-4'>" + data["version"] + "</div><div class='panel-heading col-md-12'>" + version + "</div><div class='col-md-12'><xmp>" + data["html"] + "</xmp></div></div>");
+                            $("#result_container").append("<div class='panel panel-primary col-md-12' style='padding:10px;'><div class='panel-heading col-md-8'><a href='" + url + "' target='_blank' >" + url + "</a></div><div class='panel-heading col-md-4'>" + data["version"] + "</div><div class='panel-heading col-md-12'>" + version + "</div><div class='col-md-12'><xmp>" + data["html"] + "</xmp></div></div>");
                         }
 
                     }
