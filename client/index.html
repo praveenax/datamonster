@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html class="gr__v4-alpha_getbootstrap_com" lang="en">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="http://v4-alpha.getbootstrap.com/favicon.ico">
+
+    <title>Apptastic - MonsterHack</title>
+
+    <!-- Bootstrap core CSS -->
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link href="css/bootstrap.css" rel="stylesheet"> -->
+
+    <!-- Custom styles for this template -->
+    <!-- <link href=client/css/starter-template.css" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+
+    <style media="screen">
+        pre {
+            font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+            margin-bottom: 10px;
+            overflow: auto;
+            width: auto;
+            padding: 5px;
+            background-color: #eee;
+            width: 650px!ie7;
+            padding-bottom: 20px!ie7;
+            max-height: 600px;
+        }
+    </style>
+</head>
+
+<body data-gr-c-s-loaded="true" style="font-family: 'Ubuntu', sans-serif;background:#bdc3c7;">
+
+    <nav class="navbar navbar-dark bg-inverse" style="background:#34495e;color:white;">
+        <h2 style="text-align:center;margin-top:10px;">Apptastic</h2>
+
+    </nav>
+
+    <div class="">
+
+        <div class="col-md-12">
+            <div class="col-md-9">
+
+                <select name="" id="url_holder_select" class="form-control">
+                    <option value=""></option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button id="search_versions_select" class="btn btn-success col-md-12">Fetch Urls</button>
+            </div>
+        </div>
+
+
+        <br>
+
+        <br>
+
+
+        <div class="col-md-12">
+            <div class="col-md-9">
+                <input id="url_holder" type="text" class="form-control" placeholder="Enter your Url:">
+            </div>
+            <div class="col-md-3">
+                <button id="search_versions" class="btn btn-success col-md-12">Search for all Available Versions</button>
+            </div>
+        </div>
+
+
+        <br>
+
+        <br>
+
+        <div class="col-md-12">
+            <div class="col-md-9">
+                <!-- <input type="text" class="form-control" placeholder="Enter your Url:" > -->
+
+                <input id="version_holder" type="text" class="form-control" placeholder="Enter your Version:">
+            </div>
+            <div class="col-md-3">
+                <button id="search_html_content" class="btn btn-success  col-md-12">Search for HTML</button>
+            </div>
+        </div>
+        <br>
+        <br>
+        <!-- <h3 style="text-align:center;margin-top:10px;color:white;">Search Result</h3> -->
+
+        <div id="result_container" class="container" style="height: 400px;overflow:auto;">
+
+
+
+        </div>
+
+
+
+
+
+
+
+    </div>
+    <!-- /.container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <!-- <script src="client/js/jquery.js" ></script> -->
+    <!-- <script>window.jQuery || document.write('<script src="client/js/jquery.min.js"><\/script>')</script> -->
+    <!-- <script src="client/js/tether.js" ></script> -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- <script src="client/js/bootstrap.js"></script> -->
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <!-- <script src="client/js/ie10-viewport-bug-workaround.js"></script> -->
+
+    <script>
+        $(document).ready(function () {
+
+            $("#search_versions_select").on("click", function () {
+
+                $.ajax({
+                    type: "GET",
+                    url: "/allnames",
+                    // data: data,
+                    success: function (data) {
+                        console.log(data);
+                        result_data = data["result"];
+                        //                        $("#result_container").html("");
+                        for (var i = 0; i < result_data.length; i++) {
+                            var obj = result_data[i];
+
+                            $("#url_holder_select").append("<option value='" + obj['url'] + "'>" + obj['url'] + "</option>");
+
+                        }
+                    }
+
+                });
+
+            });
+
+            $("#url_holder_select").change(function () {
+                $("#url_holder").val("" + $("#url_holder_select").val());
+            });
+
+            $("#search_versions").on("click", function () {
+                var url = $("#url_holder").val();
+                //ajax post
+
+                var result_data = [];
+
+                $.ajax({
+                    type: "GET",
+                    url: "/search?url=" + url,
+                    // data: data,
+                    success: function (data) {
+                        console.log(data);
+                        result_data = data["result"];
+                        $("#result_container").html("");
+                        for (var i = 0; i < result_data.length; i++) {
+                            var obj = result_data[i];
+
+                            $("#result_container").append("<div class='panel panel-default col-md-12' style='padding:10px;'><div class='panel-heading col-md-8'><a href='" + obj["url"] + "' target='_blank' >" + obj["url"] + "</a></div><div class='panel-heading col-md-4'>" + obj["version_raw"] + "</div><div class='panel-heading col-md-12'>" + obj["version"] + "</div></div>");
+
+                        }
+                    }
+
+                });
+
+
+
+
+            });
+
+            $("#search_html_content").on("click", function () {
+                var url = $("#url_holder").val();
+                var version = $("#version_holder").val();
+                //ajax post
+
+                $.ajax({
+                    type: "GET",
+                    url: "/raw?url=" + url + "&version=" + version,
+                    // data: data,
+                    success: function (data) {
+                        console.log(data);
+                        // result_data = data["result"];
+                        if (data["html"] == "error") {
+                            $("#result_container").html("No Data Found!");
+                        } else {
+                            $("#result_container").html("");
+                            $("#result_container").append("<div class='panel panel-primary col-md-12' style='padding:10px;'><div class='panel-heading col-md-8'><a href='" + url + "' target='_blank' >" + url + "</a></div><div class='panel-heading col-md-4'>" + data["version"] + "</div><div class='panel-heading col-md-12'>" + version + "</div><div class='col-md-12'><xmp>" + data["html"] + "</xmp></div></div>");
+                        }
+
+                    }
+
+                });
+                // $("#result_container").html("");
+
+                // var html_data = "<h1>test data </h1>";
+
+
+                // $("#result_container").append("<div class='panel panel-primary col-md-12' style='padding:10px;'><div class='panel-heading col-md-8'>"+url+"</div><div class='panel-heading col-md-4'>"+version+"</div><div class='col-md-12'><xmp>"+html_data+"</xmp></div></div>");
+
+
+
+            });
+
+
+
+        });
+    </script>
+
+
+</body>
+
+</html>
