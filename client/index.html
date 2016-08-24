@@ -34,13 +34,19 @@
             padding-bottom: 20px!ie7;
             max-height: 600px;
         }
+        
+        xmp {
+            background: #C0C0C0;
+            font-size: 1.3em;
+            white-space: pre-wrap
+        }
     </style>
 </head>
 
 <body data-gr-c-s-loaded="true" style="font-family: 'Ubuntu', sans-serif;background:#bdc3c7;">
 
     <nav class="navbar navbar-dark bg-inverse" style="background:#34495e;color:white;">
-        <h2 style="text-align:center;margin-top:10px;">Apptastic</h2>
+        <h2 style="text-align:center;margin-top:10px;height: 80px;font-size: 54px;">Apptastic</h2>
 
     </nav>
 
@@ -90,6 +96,10 @@
         </div>
         <br>
         <br>
+        <!--
+        <button id="render" class="col-md-12">
+    RENDER</button>
+-->
         <!-- <h3 style="text-align:center;margin-top:10px;color:white;">Search Result</h3> -->
 
         <div id="result_container" class="container" style="height: 400px;overflow:auto;">
@@ -121,6 +131,11 @@
 
     <script>
         $(document).ready(function () {
+
+            $("#render").on("click", function () {
+                var win = window.open("", "Title", "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=780, height=200, top=" + (screen.height - 400) + ", left=" + (screen.width - 840));
+                win.document.body.innerHTML = "HTML";
+            });
 
             $("#search_versions_select").on("click", function () {
 
@@ -193,6 +208,8 @@
                             $("#result_container").html("No Data Found!");
                         } else {
                             $("#result_container").html("");
+                            var win = window.open("", "Title", "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=780, height=200, top=" + (screen.height - 400) + ", left=" + (screen.width - 840));
+                            win.document.body.innerHTML = data["html"];
                             $("#result_container").append("<div class='panel panel-primary col-md-12' style='padding:10px;'><div class='panel-heading col-md-8'><a href='" + url + "' target='_blank' >" + url + "</a></div><div class='panel-heading col-md-4'>" + data["version"] + "</div><div class='panel-heading col-md-12'>" + version + "</div><div class='col-md-12'><xmp>" + data["html"] + "</xmp></div></div>");
                         }
 

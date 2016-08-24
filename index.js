@@ -22,7 +22,7 @@ var watcher = chokidar.watch('html_repo', {
 watcher
     .on('add', function (path) {
         fileCount++;
-        console.log(fileCount);
+        //        console.log(fileCount);
 
         // console.log('File', path, 'has been added');
         //read the file and get the data input
@@ -83,34 +83,18 @@ app.get('/', function (req, res) {
 
 
 app.get('/allnames', function (req, res) {
-    var HTMLModel = require('./model/htmlmodel');
-    HTMLModel.find(function (err, items) {
-        if (err) return console.error(err);
-        console.log(items);
 
-        var result = [];
+    var getAllNames = require('./util/getAllNames');
+    var res_data = getAllNames.execute(res);
 
-        for (var i = 0; i < items.length; i++) {
-            var tmp_obj = {};
 
-            tmp_obj.url = items[i]["url"];
-
-            result.push(tmp_obj);
-        }
-
-        console.log(result);
-
-        var data = {};
-        data.result = result;
-        res.send(data);
-    })
 });
 
 ////I serve the URL search
 app.get('/search', function (req, res) {
 
     var url = req["query"]["url"];
-    console.log(url);
+    //    console.log(url);
 
 
     //input is url >>> output is version
@@ -128,7 +112,7 @@ app.get('/search', function (req, res) {
 
         var data = {};
         var result = [];
-        console.log('Items are  is ' + docs);
+        //        console.log('Items are  is ' + docs);
 
         for (var i = 0; i < docs.length; i++) {
 
@@ -166,13 +150,15 @@ app.get('/raw', function (req, res) {
 
 
 
-    var html_data = "<h1>No Valid Data Found! Its all the Developer's Fault!!</h1>";
+    var html_data = "";
 
     var HTMLModel = require('./model/htmlmodel');
     HTMLModel.findOne({
         url: url,
         version: version
     }, null, {}, function (err, docs) {
+        //        console.log("TEST");
+        //        console.log(docs);
 
         if (docs != null) {
 
@@ -190,35 +176,47 @@ app.get('/raw', function (req, res) {
 
             //parse from new path for html
 
+            //            console.log(tmpObj);
+
             var path_from_db = docs["path"];
 
             if (path_from_db.indexOf('html_repo') >= 0) {
+                //                console.log("IF");
                 // Found word
                 // fs.unlinkSync(path_from_db);
             } else {
+                //                console.log("ELSE");
                 var output_readStream = fs.createReadStream(path_from_db);
                 var output_lineReader = require('readline').createInterface({
                     input: output_readStream
                 });
 
                 // console.log(lineReader);
-                var lineCount = 1;
+                var lineCount = 0;
                 output_lineReader.on('line', function (line) {
 
                     // console.log('Line from file:', line);
                     // readStream.close();
                     // readStream.destroy();
-                    if (lineCount != 1) {
-                        // console.log(line);
-                        tmpObj.html = tmpObj.html + "   " + line;
+                    if (lineCount == 0) {
+                        //                    console.log(line);
+
                         lineCount++;
+                    } else {
+                        tmpObj.html = tmpObj.html + "   " + line;
                     }
+
+                    //                    lineCount++;
 
 
                 });
 
-                output_lineReader.on('end', function () {
-                    console.log("End");
+                //                data = tmpObj;
+                //
+                //                res.send(data);
+
+                output_lineReader.on('close', function () {
+                    //                    console.log("End");
                     data = tmpObj;
 
                     res.send(data);
@@ -232,9 +230,9 @@ app.get('/raw', function (req, res) {
 
 
 
-            data = tmpObj;
-
-            res.send(data);
+            //            data = tmpObj;
+            //
+            //            res.send(data);
 
         } else {
             data = {
@@ -281,8 +279,9 @@ function parseParameters(str, path) {
         var int1 = m[3];
         var ws2 = m[4];
         var int2 = m[5];
-        console.log("URL>>>>>" + httpurl1.replace(/</, "&lt;"));
-        console.log("TIMESTAMP>>>>>" + int1.replace(/</, "&lt;"));
+        //        console.log("URL>>>>>" + httpurl1.replace(/</, "&lt;
+        //        "));
+        //        console.log("TIMESTAMP>>>>>" + int1.replace(/</, "&lt;"));
         // console.log("STATUS CODE>>>>>"+int2.replace(/</,"&lt;"))
 
         //Create a DB model with values url, timestamp, path
